@@ -3,28 +3,28 @@ loaderVersion = "[4,)"
 license = "MIT"
 
 [[mods]]
-modId = "cobblemon_forge_mdk"
-version = "1.0.0"
-displayName = "Cobblemon Forge Template Sidemod"
+modId = "spawn_notification"
+version = "1.4-forge-1.0.0"
+displayName = "Cobblemon Spawn Notification"
 description = '''
-
+When a Legendary and/or Shiny Pokemon shows up, a message is broadcast to all players on the server.
 '''
 
-[[dependencies.cobblemon_forge_mdk]]
+[[dependencies.spawn_notification]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1]"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobblemon_forge_mdk]]
+[[dependencies.spawn_notification]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobblemon_forge_mdk]]
+[[dependencies.spawn_notification]]
 modId = "cobblemon"
 mandatory = true
 versionRange = "[1.4.0,)"

@@ -6,8 +6,8 @@ plugins {
 }
 
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = property("maven_group")!!
+version = property("mod_version")!!
 
 architectury {
     platformSetupLoomIde()
