@@ -59,10 +59,12 @@ object SpawnNotification {
 
         @SubscribeEvent
         fun onEntityUnload(e: EntityLeaveLevelEvent) {
-            if (e.entity !is PokemonEntity) return
             if (e.level.isClientSide) return
+            val target = e.entity
+            if (target !is PokemonEntity) return
+            if (!target.pokemon.isWild()) return
 
-            broadcastDespawn((e.entity as PokemonEntity).pokemon, DespawnReason.DESPAWNED)
+            broadcastDespawn(target.pokemon, DespawnReason.DESPAWNED)
         }
     }
 
