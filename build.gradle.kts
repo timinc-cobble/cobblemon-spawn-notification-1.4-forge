@@ -35,7 +35,8 @@ dependencies {
     mappings(loom.officialMojangMappings())
     forge("net.minecraftforge:forge:1.20.1-47.2.0")
 
-    modImplementation("com.cobblemon:forge:1.4.0+1.20.1-SNAPSHOT")
+//    modImplementation("com.cobblemon:forge:1.4.0+1.20.1-SNAPSHOT")
+    modImplementation(files("libs/Cobblemon-forge-1.4.1+1.20.1-SNAPSHOT.jar"))
     implementation("thedarkcolour:kotlinforforge:4.5.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
