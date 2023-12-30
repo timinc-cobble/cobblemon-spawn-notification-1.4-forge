@@ -7,24 +7,18 @@ import java.io.FileReader
 import java.io.PrintWriter
 
 class SpawnNotificationConfig {
-//    @Comment("Whether or not to send a chat message for legendary spawns")
-    val broadcastLegendary = true
-//    @Comment("Whether or not to send a chat message for shiny spawns")
     val broadcastShiny = true
-//    @Comment("Whether or not to broadcast the coords")
     val broadcastCoords = true
-//    @Comment("Whether or not to broadcast the biome")
     val broadcastBiome = false
-//    @Comment("Whether or not to play the PLA shiny sound when a shiny spawns")
     val playShinySound = true
-//    @Comment("Whether or not to play the PLA shiny sound when a player sends out a shiny")
     val playShinySoundPlayer = false
     val announceCrossDimensions = false
     val broadcastDespawns = false
+    val labelsForBroadcast: MutableSet<String> = mutableSetOf("legendary")
 
     class Builder {
         companion object {
-            fun load() : SpawnNotificationConfig {
+            fun load(): SpawnNotificationConfig {
                 val gson = GsonBuilder()
                     .disableHtmlEscaping()
                     .setPrettyPrinting()
