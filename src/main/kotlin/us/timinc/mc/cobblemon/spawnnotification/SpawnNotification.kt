@@ -17,11 +17,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import us.timinc.mc.cobblemon.spawnnotification.config.SpawnNotificationConfig
 import us.timinc.mc.cobblemon.spawnnotification.util.Broadcast
+import us.timinc.mc.cobblemon.spawnnotification.util.DespawnReason
 
 @Mod(SpawnNotification.MOD_ID)
 object SpawnNotification {
     const val MOD_ID = "spawn_notification"
-    private lateinit var config: SpawnNotificationConfig
+    private var config: SpawnNotificationConfig = SpawnNotificationConfig.Builder.load()
 
     @JvmStatic
     var SHINY_SOUND_ID: ResourceLocation = ResourceLocation("$MOD_ID:pla_shiny")
@@ -33,9 +34,8 @@ object SpawnNotification {
     object Registration {
         @SubscribeEvent
         fun onInit(e: ServerStartedEvent) {
-            config = SpawnNotificationConfig.Builder.load()
-
             CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe { evt ->
+                if (evt.ctx.world.isClientSide) return@subscribe
                 val pokemon = evt.entity.pokemon
                 if (pokemon.isPlayerOwned()) return@subscribe
 
@@ -73,10 +73,12 @@ object SpawnNotification {
         reason: DespawnReason
     ) {
         if (config.broadcastDespawns && (pokemon.shiny || pokemon.isLegendary())) {
-            Broadcast.broadcastMessage(Component.translatable(
-                "$MOD_ID.notification.${reason.translationKey}",
-                pokemon.getDisplayName()
-            ))
+            Broadcast.broadcastMessage(
+                Component.translatable(
+                    "$MOD_ID.notification.${reason.translationKey}",
+                    pokemon.getDisplayName()
+                )
+            )
         }
     }
 
@@ -86,9 +88,11 @@ object SpawnNotification {
         val pokemon = evt.entity.pokemon
         val pokemonName = pokemon.getDisplayName()
 
+        val matchedLabel = pokemon.form.labels.firstOrNull { config.labelsForBroadcast.contains(it) }
+
         val message = when {
-            config.broadcastLegendary && config.broadcastShiny && pokemon.isLegendary() && pokemon.shiny -> "$MOD_ID.notification.both"
-            config.broadcastLegendary && pokemon.isLegendary() -> "$MOD_ID.notification.legendary"
+            matchedLabel != null && config.broadcastShiny && pokemon.shiny -> "$MOD_ID.notification.$matchedLabel.shiny"
+            matchedLabel != null -> "$MOD_ID.notification.$matchedLabel"
             config.broadcastShiny && pokemon.shiny -> "$MOD_ID.notification.shiny"
             else -> return
         }
@@ -116,10 +120,12 @@ object SpawnNotification {
         }
 
         if (config.announceCrossDimensions) {
-            messageComponent = messageComponent.append(Component.translatable(
-                "$MOD_ID.notification.dimension",
-                Component.translatable("dimension.${level.dimension().location().toLanguageKey()}")
-            ))
+            messageComponent = messageComponent.append(
+                Component.translatable(
+                    "$MOD_ID.notification.dimension",
+                    Component.translatable("dimension.${level.dimension().location().toLanguageKey()}")
+                )
+            )
 
             Broadcast.broadcastMessage(messageComponent)
         } else {
